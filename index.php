@@ -10,7 +10,7 @@ $settings = array(
 );
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";
-$getfield = '?screen_name=b92vesti&count=2';
+$getfield = '?screen_name=b92vesti&count=0';
 $twitter = new TwitterAPIExchange($settings);
 $response_arr = json_decode($twitter->setGetfield($getfield)
 ->buildOauth($url, $requestMethod)
