@@ -1,5 +1,5 @@
 <?php
-require_once('vendor/twitter-api/TwitterAPIExchange.php');
+require_once('library/twitter-api/TwitterAPIExchange.php');
 //requre_once('config.php');
 /** Set access tokens here - see: https://dev.twitter.com/apps/ **/
 $settings = array(

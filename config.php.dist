@@ -1,1 +1,9 @@
+<?php
+//return config parameters
+return [
+    'oauth_access_token' => "84282069-i0PRmyYUVgOk7JxaAXCCoBShawoY3c6kEM9ROBN63",
+    'oauth_access_token_secret' => "JDTQOlc4m8FLVFinkSQ8O76bIq3jYXPolaVVSckwoDzSt",
+    'consumer_key' => "Zzwn5YC9NqqlHnFzzXgANSzkh",
+    'consumer_secret' => "RvnYoviXYep7Q2tNzsZZnaeHaa7Eu5WcHzCRNz75fGPH2CvZ8U"
+];
 
