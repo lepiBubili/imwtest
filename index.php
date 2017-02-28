@@ -1,27 +1,21 @@
 <?php
-require_once('library/twitter-api/TwitterAPIExchange.php');
-//requre_once('config.php');
-/** Set access tokens here - see: https://dev.twitter.com/apps/ **/
-$settings = array(
-'oauth_access_token' => "84282069-i0PRmyYUVgOk7JxaAXCCoBShawoY3c6kEM9ROBN63",
-'oauth_access_token_secret' => "JDTQOlc4m8FLVFinkSQ8O76bIq3jYXPolaVVSckwoDzSt",
-'consumer_key' => "Zzwn5YC9NqqlHnFzzXgANSzkh",
-'consumer_secret' => "RvnYoviXYep7Q2tNzsZZnaeHaa7Eu5WcHzCRNz75fGPH2CvZ8U"
-);
-$url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-$requestMethod = "GET";
-$getfield = '?screen_name=b92vesti&count=0';
-$twitter = new TwitterAPIExchange($settings);
-$response_arr = json_decode($twitter->setGetfield($getfield)
-->buildOauth($url, $requestMethod)
-->performRequest(),$assoc = TRUE);
-
-if($response_arr["errors"][0]["message"] != "") {
-    echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following "
+require_once('library/twitter-api/TwitterAPIEmbed.php');
+require_once('view/Header.php');
+require_once('view/Footer.php');
+require_once('view/TweetsView.php');
+require_once('entity/ErrorClass.php');
+//header settings
+Header::instance()->createHeader();
+$view = new TweetsView();
+$settings = include('config.php');
+$twitter = new TwitterAPIEmbed($settings);
+$response = $twitter->getTweets();
+if ($response instanceof ErrorClass) {
+   echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following "
     . "error message:</p><p><em>".
-            $response_arr[errors][0]["message"]."</em></p>";
-    exit();
+            $response->message ."</em></p>";
+    exit(); 
 }
-echo "<pre>";
-print_r($response_arr);
-echo "</pre>";
+
+$view->showTweets($response);
+Footer::instance()->createFooter();

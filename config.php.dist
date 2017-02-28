@@ -6,7 +6,12 @@ return [
     'consumer_key' => "YOUR_CONSUMER_KEY",
     'consumer_secret' => "YOUR_CONSUMER_SECRET",
     'screen_name' => 'b92vesti',
-    'count' => 0
+    'count' => 0,
+    //db credentials
+    'db_host' => 'DB_HOST',
+    'db_username' => 'DB_USERNAME',
+    'db_password' => 'DB_PASSWORD',
+    'db_name' => 'twitter_log'
     
 ];
 

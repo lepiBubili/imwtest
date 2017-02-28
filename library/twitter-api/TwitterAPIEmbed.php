@@ -1,5 +1,8 @@
 <?php
 require_once('TwitterAPIExchange.php');
+require_once(__DIR__.'/../../entity/ErrorClass.php');
+require_once(__DIR__.'/../../entity/Tweet.php');
+require_once(__DIR__.'/../../entity/User.php');
 /**
  * Twitter API Embed : Class that configures connection and realises 
  * API calls for the v1.1 API extending Twitter-API-Exchange wrapper
@@ -42,7 +45,11 @@ class TwitterAPIEmbed extends TwitterAPIExchange
     }
     
     
-    public function get()
+    /**
+     * 
+     * @return \Error|array
+     */
+    public function getTweets()
     {
         $getfield = '';
         if (!empty($this->credentials['screen_name']) && !empty($this->credentials['count'])) {
@@ -54,7 +61,38 @@ class TwitterAPIEmbed extends TwitterAPIExchange
             $getfield = '?count=' . $this->credentials['count'];
         }
         
-        $this->twitterApiExchange->setGetfield($getfield);
+        $response_arr = json_decode($this->setGetfield($getfield)
+            ->buildOauth($this->urlGet, self::GET)
+            ->performRequest(),TRUE);
+        
+        if(isset($response_arr["errors"]) && !empty($response_arr["errors"][0]["message"])) {
+            return new ErrorClass(400, $response_arr["errors"][0]["message"] );
+        }
+        
+        $tweets = [];
+        
+        foreach ($response_arr as $response) {
+            $tweet = new Tweet();
+            $tweet->id_str = $response['id_str'];
+            $tweet->created_at = $response['created_at'];
+            $tweet->favorited = $response['favorited'];
+            $tweet->retweet_count = $response['retweet_count'];
+            $tweet->text = $response['text'];
+            
+            $user = new User();
+            $user->id_str = $response['user']['id_str'];
+            $user->name = $response['user']['name'];
+            $user->profile_image_url = $response['user']['profile_image_url'];
+            $user->location = $response['user']['location'];
+            $user->url = $response['user']['url'];
+            $user->screen_name = $response['user']['screen_name'];
+            
+            $tweet->setUser($user);
+            
+            $tweets[] = $tweet;
+        }
+        
+        return $tweets;
     }
     
     
