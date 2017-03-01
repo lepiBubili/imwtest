@@ -48,8 +48,8 @@ class Mapper
         
         $date = new \DateTime($tweet->created_at);
         $created_at_formatted = $date->format("Y-m-d H:i:s");
-        
-        if (!$this->conn->query("INSERT INTO tweet (id_str, name, created_at, favorited,
+
+        if (!$this->conn->query("INSERT INTO tweet (id_str, created_at, favorited,
             retweet_count, user_id, text) 
            VALUES ('". $tweet->id_str."', '". $created_at_formatted ."', '". $tweet->favorited
                 ."', '" . $tweet->retweet_count . "', '" . $tweet->user_id . "', '" . $tweet->text . "')")) {
@@ -94,9 +94,12 @@ class Mapper
         if (!$result) {
           return false;
         }
-        
+
         $tweet = new Tweet();
         $row = $result->fetch_row();
+        if (!(count($row) > 0)) {
+            return false;
+        } 
         $tweet->id = $row[0];
         $tweet->id_str = $row[1];
         $tweet->created_at = $row[2];
@@ -131,6 +134,42 @@ class Mapper
         
         $user = new User();
         $row = $result->fetch_row();
+        if (!(count($row) > 0)) {
+            return false;
+        }
+        $user->id = $row[0];
+        $user->id_str = $row[1];
+        $user->name = $row[2];
+        $user->profile_image_url = $row[3];
+        $user->location = $row[4];
+        $user->url = $row[5];
+        $user->screen_name = $row[6];
+
+        return $user;
+        
+    }
+    
+    
+    /**
+     * 
+     * @param string $id
+     * @return false|\User
+     */
+    public function fetchUserById($id)
+    {
+        $result = $this->conn->query("SELECT id, id_str, name, profile_image_url,
+            location, url, screen_name 
+            FROM user 
+            WHERE id = '".$id."'");
+        if (!$result) {
+          return false;
+        }
+        
+        $user = new User();
+        $row = $result->fetch_row();
+        if (!(count($row) > 0)) {
+            return false;
+        }
         $user->id = $row[0];
         $user->id_str = $row[1];
         $user->name = $row[2];
